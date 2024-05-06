@@ -69,8 +69,16 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       ? [
           <Link key="openapi" to="/umi/plugin/openapi" target="_blank">
             <LinkOutlined />
-            <span>OpenAPI 文档</span>
+            <span>OpenAPI Doc</span>
           </Link>,
+        // <Link key="baidu" to="https://www.baidu.com" target="_blank">
+        //   <LinkOutlined />
+        //   帮助
+        // </Link>,
+        <a key="baidu" href="https://www.baidu.com" target="_blank" rel="noopener noreferrer">
+          <LinkOutlined />
+            帮助
+        </a>,
         ]
       : [],
     menuHeaderRender: undefined,

@@ -5,7 +5,11 @@ import {
   getInterfaceInfoByIdUsingGET,
   invokeInterfaceInfoUsingPOST,
 } from '@/services/yuapi-backend/interfaceInfoController';
-import { useParams } from '@@/exports';
+
+import {useModel, useParams} from '@@/exports';
+import {getRemainingCallsUsingGET,
+  incrementCallCountUsingPOST,} from "@/services/yuapi-backend/userInterfaceInfoController";
+
 
 /**
  * 主页
@@ -16,8 +20,13 @@ const Index: React.FC = () => {
   const [data, setData] = useState<API.InterfaceInfo>();
   const [invokeRes, setInvokeRes] = useState<any>();
   const [invokeLoading, setInvokeLoading] = useState(false);
+  const [remainingCalls, setRemainingCalls] = useState<number>(0);
 
   const params = useParams();
+
+  const { initialState } = useModel('@@initialState');
+  const userId = initialState?.loginUser?.id;
+
 
   const loadData = async () => {
     if (!params.id) {
@@ -40,6 +49,43 @@ const Index: React.FC = () => {
     loadData();
   }, []);
 
+  const fetchRemainingCalls = async () => {
+    if (!userId || !params.id) {
+      message.error('用户未登录或接口ID未提供');
+      return;
+    }
+    try {
+      const resOfRemain = await getRemainingCallsUsingGET({ userId, interfaceInfoId: Number(params.id) });
+      setRemainingCalls(resOfRemain.data ?? 0);  // 使用空值合并运算符提供默认值
+    } catch (error) {
+      message.error('获取剩余调用次数失败');
+    }
+  };
+
+  useEffect(() => {
+    fetchRemainingCalls();
+  }, [userId, params.id, fetchRemainingCalls]); // 依赖 userId 和 params.id
+
+  // 用于增加调用次数的函数
+  const incrementCalls = async () => {
+    const interfaceInfoId = params.id;  // 从 URL 参数获取接口 ID
+    try {
+      if (userId === undefined) {
+        message.error('用户未登录');
+        return;
+      }
+      await incrementCallCountUsingPOST({ userId, interfaceInfoId: Number(interfaceInfoId) });
+      message.success('调用次数增加成功');
+      await fetchRemainingCalls();  // 更新显示的剩余调用次数
+    } catch (error: any) {
+      message.error('增加调用次数失败：' + error.message);
+    }
+  };
+
+
+
+
+
   const onFinish = async (values: any) => {
     if (!params.id) {
       message.error('接口不存在');
@@ -53,6 +99,7 @@ const Index: React.FC = () => {
       });
       setInvokeRes(res.data);
       message.success('请求成功');
+      await fetchRemainingCalls();  // 再次获取最新的剩余调用次数
     } catch (error: any) {
       message.error('操作失败，' + error.message);
     }
@@ -80,6 +127,11 @@ const Index: React.FC = () => {
       </Card>
       <Divider />
       <Card title="在线测试">
+        <Descriptions>
+          <Descriptions.Item label="剩余调用次数">{remainingCalls}</Descriptions.Item>
+        </Descriptions>
+        <Button onClick={incrementCalls} type="primary">获取调用次数</Button>
+        <Divider />
         <Form name="invoke" layout="vertical" onFinish={onFinish}>
           <Form.Item label="请求参数" name="userRequestParams">
             <Input.TextArea />

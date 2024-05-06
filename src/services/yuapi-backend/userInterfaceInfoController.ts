@@ -91,3 +91,32 @@ export async function updateUserInterfaceInfoUsingPOST(
     ...(options || {}),
   });
 }
+
+/** getRemainingCalls GET /api/interface/remainingCalls */
+export async function getRemainingCallsUsingGET(
+  params: API.RemainingCallsRequest,
+  options?: { [key: string]: any },
+) {
+  return request<API.BaseResponselong>('/api/userInterfaceInfo/remainingCalls', {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
+
+export async function incrementCallCountUsingPOST(
+  body: API.IncrementCallCountRequest,
+  options?: { [key: string]: any },
+) {
+  return request<API.BaseResponseboolean>('/api/userInterfaceInfo/incrementCallCount', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+

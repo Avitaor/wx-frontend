@@ -1,25 +1,12 @@
 import Footer from '@/components/Footer';
-import { getFakeCaptcha } from '@/services/ant-design-pro/login';
-import {
-  AlipayCircleOutlined,
-  LockOutlined,
-  MobileOutlined,
-  TaobaoCircleOutlined,
-  UserOutlined,
-  WeiboCircleOutlined,
-} from '@ant-design/icons';
-import {
-  LoginForm,
-  ProFormCaptcha,
-  ProFormCheckbox,
-  ProFormText,
-} from '@ant-design/pro-components';
-import { history, useModel } from '@umijs/max';
-import { Alert, message, Tabs } from 'antd';
-import React, { useState } from 'react';
-import { flushSync } from 'react-dom';
+import {getFakeCaptcha} from '@/services/ant-design-pro/login';
+import {LockOutlined, MobileOutlined, UserOutlined,} from '@ant-design/icons';
+import {LoginForm, ProFormCaptcha, ProFormText,} from '@ant-design/pro-components';
+import {history, Link, useModel} from '@umijs/max';
+import {Alert, message, Tabs} from 'antd';
+import React, {useState} from 'react';
 import styles from './index.less';
-import { userLoginUsingPOST } from '@/services/yuapi-backend/userController';
+import {userLoginUsingPOST} from '@/services/yuapi-backend/userController';
 
 const LoginMessage: React.FC<{
   content: string;
@@ -42,16 +29,25 @@ const Login: React.FC = () => {
   const handleSubmit = async (values: API.UserLoginRequest) => {
     try {
       // 登录
-      const res = await userLoginUsingPOST({
-        ...values,
-      });
+      const res = await userLoginUsingPOST(values);
       if (res.data) {
-        const urlParams = new URL(window.location.href).searchParams;
-        history.push(urlParams.get('redirect') || '/');
-        setInitialState({
-          loginUser: res.data
-        });
+        setInitialState(s => ({ ...s, loginUser: res.data }));
+
+        // 处理重定向
+        const urlParams = new URLSearchParams(window.location.search);
+        const redirect = urlParams.get('redirect') || '/';
+        history.push(redirect);
         return;
+      // const res = await userLoginUsingPOST({
+      //   ...values,
+      // });
+      // if (res.data) {
+      //   const urlParams = new URL(window.location.href).searchParams;
+      //   history.push(urlParams.get('redirect') || '/');
+      //   setInitialState({
+      //     loginUser: res.data
+      //   });
+      //   return;
       }
     } catch (error) {
       const defaultLoginFailureMessage = '登录失败，请重试！';
@@ -64,18 +60,18 @@ const Login: React.FC = () => {
     <div className={styles.container}>
       <div className={styles.content}>
         <LoginForm
-          logo={<img alt="logo" src="/logo.svg" />}
+          logo={<img alt="logo" src="/logo2.jpg" />}
           title="wenxin接口"
           subTitle={'API 开放平台'}
           initialValues={{
             autoLogin: true,
           }}
-          actions={[
-            '其他登录方式 :',
-            <AlipayCircleOutlined key="AlipayCircleOutlined" className={styles.icon} />,
-            <TaobaoCircleOutlined key="TaobaoCircleOutlined" className={styles.icon} />,
-            <WeiboCircleOutlined key="WeiboCircleOutlined" className={styles.icon} />,
-          ]}
+          // actions={[
+          //   '其他登录方式 :',
+          //   <AlipayCircleOutlined key="AlipayCircleOutlined" className={styles.icon} />,
+          //   <TaobaoCircleOutlined key="TaobaoCircleOutlined" className={styles.icon} />,
+          //   <WeiboCircleOutlined key="WeiboCircleOutlined" className={styles.icon} />,
+          // ]}
           onFinish={async (values) => {
             await handleSubmit(values as API.UserLoginRequest);
           }}
@@ -89,10 +85,10 @@ const Login: React.FC = () => {
                 key: 'account',
                 label: '账户密码登录',
               },
-              {
-                key: 'mobile',
-                label: '手机号登录',
-              },
+              // {
+              //   key: 'mobile',
+              //   label: '手机号登录',
+              // },
             ]}
           />
 
@@ -107,7 +103,7 @@ const Login: React.FC = () => {
                   size: 'large',
                   prefix: <UserOutlined className={styles.prefixIcon} />,
                 }}
-                placeholder={'用户名: admin or user'}
+                placeholder={'清输入用户名'}
                 rules={[
                   {
                     required: true,
@@ -121,7 +117,7 @@ const Login: React.FC = () => {
                   size: 'large',
                   prefix: <LockOutlined className={styles.prefixIcon} />,
                 }}
-                placeholder={'密码: ant.design'}
+                placeholder={'清输入密码'}
                 rules={[
                   {
                     required: true,
@@ -192,13 +188,16 @@ const Login: React.FC = () => {
               marginBottom: 24,
             }}
           >
-            <ProFormCheckbox noStyle name="autoLogin">
-              自动登录
-            </ProFormCheckbox>
+            {/*<ProFormCheckbox noStyle name="autoLogin">*/}
+            {/*  自动登录*/}
+            {/*</ProFormCheckbox>*/}
+            <Link to="/user/register">新用户注册</Link>
             <a
+              href="https://www.baidu.com"
               style={{
                 float: 'right',
               }}
+
             >
               忘记密码 ?
             </a>

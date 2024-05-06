@@ -565,6 +565,18 @@ declare namespace API {
     userRole?: string;
   };
 
+  // Define types for the remaining calls and increment call count requests
+  type RemainingCallsRequest = {
+    userId: number;
+    interfaceInfoId: number;
+  };
+
+  type IncrementCallCountRequest = {
+    userId: number;
+    interfaceInfoId: number;
+  };
+
+
   type UserVO = {
     createTime?: string;
     gender?: number;
