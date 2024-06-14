@@ -5,7 +5,7 @@ import { SettingDrawer } from '@ant-design/pro-components';
 import type { RunTimeLayoutConfig } from '@umijs/max';
 import { history, Link } from '@umijs/max';
 import { requestConfig } from './requestConfig';
-import {getLoginUserUsingGET} from "@/services/yuapi-backend/userController";
+import {getLoginUserUsingGET} from "@/services/wxapi-backend/userController";
 
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';

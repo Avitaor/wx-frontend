@@ -544,10 +544,30 @@ declare namespace API {
     totalNum?: number;
   };
 
+
+
   type UserLoginRequest = {
     userAccount?: string;
     userPassword?: string;
   };
+
+  type UserInterfaceInfo = {
+    id: number;
+    userId: number;
+    interfaceInfoId: number;
+    totalNum: number;
+    leftNum: number;
+    status: number;
+    createTime: string;
+    updateTime: string;
+  };
+
+  type BaseResponseListUserInterfaceInfo = {
+    code: number;
+    data: UserInterfaceInfo[];
+    message: string;
+  };
+
 
   type UserRegisterRequest = {
     checkPassword?: string;

@@ -107,7 +107,7 @@ export async function getRemainingCallsUsingGET(
 }
 
 export async function incrementCallCountUsingPOST(
-  body: API.IncrementCallCountRequest,
+  body: { userId, interfaceInfoId },
   options?: { [key: string]: any },
 ) {
   return request<API.BaseResponseboolean>('/api/userInterfaceInfo/incrementCallCount', {
@@ -120,3 +120,16 @@ export async function incrementCallCountUsingPOST(
   });
 }
 
+/** getAllInterfaceCallsByUserId GET /api/userInterfaceInfo/allInterfaceCalls */
+export async function getAllInterfaceCallsByUserIdUsingGET(
+  params: { userId: number },
+  options?: { [key: string]: any },
+) {
+  return request<API.BaseResponseListUserInterfaceInfo>('/api/userInterfaceInfo/allInterfaceCalls', {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}

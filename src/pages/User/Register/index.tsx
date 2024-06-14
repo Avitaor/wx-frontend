@@ -5,7 +5,7 @@ import {message, Tabs} from 'antd';
 import React, {useState} from 'react';
 import {history} from 'umi';
 import styles from './index.less';
-import {userRegisterUsingPOST} from '@/services/yuapi-backend/userController';
+import {userRegisterUsingPOST} from '@/services/wxapi-backend/userController';
 
 const Register: React.FC = () => {
   const [type, setType] = useState<string>('account');

@@ -4,11 +4,11 @@ import {Button, Card, Descriptions, Form, message, Input, Spin, Divider} from 'a
 import {
   getInterfaceInfoByIdUsingGET,
   invokeInterfaceInfoUsingPOST,
-} from '@/services/yuapi-backend/interfaceInfoController';
+} from '@/services/wxapi-backend/interfaceInfoController';
 
 import {useModel, useParams} from '@@/exports';
 import {getRemainingCallsUsingGET,
-  incrementCallCountUsingPOST,} from "@/services/yuapi-backend/userInterfaceInfoController";
+  incrementCallCountUsingPOST,} from "@/services/wxapi-backend/userInterfaceInfoController";
 
 
 /**
@@ -55,7 +55,7 @@ const Index: React.FC = () => {
       return;
     }
     try {
-      const resOfRemain = await getRemainingCallsUsingGET({ userId, interfaceInfoId: Number(params.id) });
+      const resOfRemain = await getRemainingCallsUsingGET({ userId: Number(userId), interfaceInfoId: Number(params.id) });
       setRemainingCalls(resOfRemain.data ?? 0);  // 使用空值合并运算符提供默认值
     } catch (error) {
       message.error('获取剩余调用次数失败');

@@ -6,7 +6,7 @@ import {history, Link, useModel} from '@umijs/max';
 import {Alert, message, Tabs} from 'antd';
 import React, {useState} from 'react';
 import styles from './index.less';
-import {userLoginUsingPOST} from '@/services/yuapi-backend/userController';
+import {userLoginUsingPOST} from '@/services/wxapi-backend/userController';
 
 const LoginMessage: React.FC<{
   content: string;
